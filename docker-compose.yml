@@ -9,6 +9,11 @@ services:
       - "5432:5432"
     volumes:
       - cloudlift_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cloudlift -d cloudlift"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   app:
     build:
@@ -17,8 +22,14 @@ services:
       - "3000:3000"
     environment:
       PORT: 3000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: cloudlift
+      DB_USER: cloudlift
+      DB_PASSWORD: cloudliftpass
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   cloudlift_pgdata:
