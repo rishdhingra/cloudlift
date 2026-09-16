@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cloudlift
+      POSTGRES_USER: cloudlift
+      POSTGRES_PASSWORD: cloudliftpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - cloudlift_pgdata:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: ./app
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+    depends_on:
+      - db
+
+volumes:
+  cloudlift_pgdata:
