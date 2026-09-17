@@ -1,0 +1,72 @@
+name: Deploy existing demo
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: cloudlift-deploy
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      AWS_REGION: us-east-1
+      DEMO_EXPIRES_AT: ${{ vars.DEMO_EXPIRES_AT }}
+      ECR_URI: public.ecr.aws/c5t6h8t1/cloudlift-api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+      - name: Refuse to restart a stopped or deleted demo
+        run: |
+          aws ecs describe-services --cluster cloudlift --services cloudlift-api > service.json
+          python3 - <<'PYCODE'
+          import json, os, datetime
+          deadline=datetime.datetime.fromisoformat(os.environ['DEMO_EXPIRES_AT'].replace('Z','+00:00'))
+          assert deadline > datetime.datetime.now(datetime.timezone.utc)+datetime.timedelta(minutes=20), 'Demo deadline missing, passed, or too close'
+          s=json.load(open('service.json'))['services']
+          assert len(s)==1 and s[0]['status']=='ACTIVE' and 1 <= s[0]['desiredCount'] <= 2, 'Demo must already be active'
+          PYCODE
+      - name: Build and publish immutable image
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+          docker build --platform linux/amd64 -t "$ECR_URI:$GITHUB_SHA" app
+          docker push "$ECR_URI:$GITHUB_SHA"
+          DIGEST=$(aws ecr-public describe-images --repository-name cloudlift-api --image-ids imageTag="$GITHUB_SHA" --query 'imageDetails[0].imageDigest' --output text)
+          echo "IMAGE=$ECR_URI@$DIGEST" >> "$GITHUB_ENV"
+      - name: Update task definition and deploy
+        run: |
+          TASK=$(python3 -c "import json; print(json.load(open('service.json'))['services'][0]['taskDefinition'])")
+          aws ecs describe-task-definition --task-definition "$TASK" > task.json
+          python3 - <<'PYCODE'
+          import json, os
+          t=json.load(open('task.json'))['taskDefinition']
+          for k in ['taskDefinitionArn','revision','status','requiresAttributes','compatibilities','registeredAt','registeredBy','deregisteredAt']:
+              t.pop(k,None)
+          for c in t['containerDefinitions']:
+              if c['name']=='api': c['image']=os.environ['IMAGE']
+          json.dump(t,open('register.json','w'))
+          PYCODE
+          REVISION=$(aws ecs register-task-definition --cli-input-json file://register.json --query 'taskDefinition.taskDefinitionArn' --output text)
+          aws ecs update-service --cluster cloudlift --service cloudlift-api --task-definition "$REVISION" > deployment.json
+          aws ecs wait services-stable --cluster cloudlift --services cloudlift-api
+          aws ecs describe-services --cluster cloudlift --services cloudlift-api > final-service.json
+          python3 - "$REVISION" <<'PYCODE'
+          import json, sys
+          s=json.load(open('final-service.json'))['services'][0]
+          assert s['taskDefinition']==sys.argv[1], 'Deployment rolled back'
+          assert s['runningCount']==s['desiredCount'] and s['runningCount']>0
+          PYCODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deployment-evidence
+          path: |
+            deployment.json
+            final-service.json
+          retention-days: 7

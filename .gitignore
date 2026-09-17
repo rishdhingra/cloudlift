@@ -8,3 +8,8 @@ node_modules/
 *.tfstate.*
 *.tfplan
 crash.log
+
+# Local run configuration and generated evidence
+*.auto.tfvars.json
+__pycache__/
+work/

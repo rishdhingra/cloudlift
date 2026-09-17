@@ -1,0 +1,45 @@
+name: Validate CloudLift
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: cloudlift
+          POSTGRES_USER: cloudlift
+          POSTGRES_PASSWORD: local-test-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U cloudlift -d cloudlift"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+        working-directory: app
+      - name: Integration tests
+        env:
+          DB_HOST: localhost
+          DB_PORT: '5432'
+          DB_NAME: cloudlift
+          DB_USER: cloudlift
+          DB_PASSWORD: local-test-only
+        run: |
+          node app/src/server.js > /tmp/cloudlift-api.log 2>&1 &
+          trap 'kill $! 2>/dev/null || true' EXIT
+          python3 scripts/test_api.py http://localhost:3000
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.15.5'
+      - run: terraform fmt -check && terraform init -backend=false && terraform validate
+        working-directory: terraform
+      - run: docker build -t cloudlift-test app
