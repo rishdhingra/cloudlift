@@ -24,7 +24,7 @@ resource "aws_iam_role_policy" "cleanup" {
 locals {
   cleanup_targets = {
     api      = { action = "ecs:updateService", payload = { Cluster = aws_ecs_cluster.cloudlift.name, Service = aws_ecs_service.api.name, DesiredCount = 0 } }
-    database = { action = "rds:deleteDBInstance", payload = { DBInstanceIdentifier = aws_db_instance.cloudlift.identifier, SkipFinalSnapshot = true, DeleteAutomatedBackups = true } }
+    database = { action = "rds:deleteDBInstance", payload = { DbInstanceIdentifier = aws_db_instance.cloudlift.identifier, SkipFinalSnapshot = true, DeleteAutomatedBackups = true } }
     alb      = { action = "elasticloadbalancingv2:deleteLoadBalancer", payload = { LoadBalancerArn = aws_lb.cloudlift.arn } }
   }
 }

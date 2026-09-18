@@ -1,82 +1,82 @@
-CloudLift
+# CloudLift
 
-Containerized Application Migration & Reliability on AWS
+Containerized application migration and reliability testing on AWS.
 
-CloudLift explores migrating a Node.js and PostgreSQL application from a local Docker environment to AWS. The project combines infrastructure as code, container deployment automation, and reliability testing.
+CloudLift takes a Node.js/Express and PostgreSQL application from local Docker Compose to AWS ECS Fargate, an Application Load Balancer, and encrypted Multi-AZ RDS. Terraform defines the infrastructure; GitHub Actions builds and deploys the container using OIDC authentication.
 
-Stack: Node.js · Express · PostgreSQL · Docker · Terraform · AWS ECS Fargate · RDS · ALB · CloudWatch · GitHub Actions
+**Status:** Deployed and tested in `us-east-1` on September 18, 2026, then torn down to control costs. There is no live demo endpoint. The source, test results, and deployment history remain available.
 
-Architecture
+## Architecture
 
-The Terraform configuration defines:
+```mermaid
+flowchart TD
+    Client[Allowed demo client] --> ALB[Application Load Balancer]
+    ALB --> A[Fargate API - AZ a]
+    ALB --> B[Fargate API - AZ b]
+    A --> DB[(Private RDS PostgreSQL primary)]
+    B --> DB
+    DB --> Standby[(Multi-AZ standby)]
+    GitHub[GitHub Actions via OIDC] --> ECR[Public ECR image]
+    ECR --> A
+    ECR --> B
+    A --> CW[CloudWatch logs and metrics]
+    B --> CW
+```
 
-An Application Load Balancer routing requests to ECS Fargate tasks across two Availability Zones.
+Fargate tasks use public subnets and public IPs for outbound registry/AWS API access; their inbound application traffic is allowed only from the load balancer. The database is in private subnets. The demo avoids a NAT gateway.
 
-An encrypted Multi-AZ PostgreSQL database in private subnets.
+## Verified results
 
-Security groups controlling communication between the load balancer, application, and database.
+| Check | Observed result |
+| --- | --- |
+| API integration | 9 checks passed before and after GitHub deployment |
+| Multi-AZ application | Two healthy targets in `us-east-1a` and `us-east-1b` |
+| Two-task load sample | 100/100 successful; p50 57.82 ms, p95 125.35 ms |
+| One-task load sample | 100/100 successful; p50 57.19 ms, p95 63.95 ms |
+| Controlled task stop | Automatic replacement; 281 probes, zero failures; both targets confirmed healthy within 82 seconds |
+| RDS forced failover | Primary moved from AZ a to AZ b; 277 probes, five failures; original synthetic customer retained |
+| GitHub deployment | OIDC authentication, image publication, and ECS deployment succeeded |
+| Teardown | Empty Terraform state; AWS checks found no CloudLift database, load balancer, or ECS cluster |
 
-CloudWatch logs, metrics, and a monitoring dashboard.
+These are small, client-observed demo tests, not capacity benchmarks or availability guarantees. The one-task sample was faster; the experiment does not demonstrate a speedup from two tasks. Scaling was manual, not autoscaling. Database failover caused a temporary interruption.
 
-Application
+See the [verification record](docs/evidence.md), [raw evidence](docs/evidence/), and [successful deployment run](https://github.com/rishdhingra/cloudlift/actions/runs/35393411374).
 
-The REST API supports customer management and database health checks.
+## Run locally
 
-Endpoint
+Prerequisites: Docker with Compose and Python 3.
 
-Description
-
-GET /
-
-Service information
-
-GET /health
-
-Application and database health
-
-GET /api/customers
-
-List customers
-
-POST /api/customers
-
-Create a customer
-
-GET /api/stats
-
-Customer count
-
-Security
-
-IAM-based database authentication for the application.
-
-AWS Secrets Manager integration for database initialization.
-
-Certificate-verified TLS connections to PostgreSQL.
-
-Scoped IAM roles and GitHub Actions authentication through OpenID Connect.
-
-Non-root application containers.
-
-CI/CD
-
-The validation workflow checks the application, Terraform configuration, and Docker build. A separate, manually triggered deployment workflow publishes an image to ECR and updates an existing ECS service.
-
-Run Locally
-
+```sh
 docker compose up --build -d
-
-The API is available at http://localhost:3000.
-
-Run integration and bounded load tests:
-
 python3 scripts/test_api.py http://localhost:3000
 python3 scripts/load_test.py http://localhost:3000 --requests 100 --workers 5
-
-Stop the application:
-
 docker compose down
+```
 
-Project Status
+The API listens on `http://localhost:3000`. Compose keeps its database volume when stopped normally.
 
-Local integration, load, and database-recovery tests have passed. AWS deployment configuration is prepared; cloud deployment and failover validation are in progress.
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /` | Service information |
+| `GET /health` | Application/database health |
+| `GET /api/customers` | List up to 100 customers |
+| `POST /api/customers` | Create a synthetic customer from `name` and `email` |
+| `GET /api/stats` | Customer count |
+
+## Security and scope
+
+- Non-root containers; read-only container root filesystem in ECS.
+- IAM database authentication for the application, with certificate-verified database TLS.
+- Secrets Manager supplies the administrator credential only to the one-off migration task.
+- Encrypted database storage and security-group boundaries between the load balancer, app, and database.
+- GitHub deployment access restricted to this repository's `main` branch using its immutable OIDC identity.
+
+This is an educational demo using synthetic customer data. The client-facing endpoint uses HTTP with an IP allowlist and has no application authentication. It is not a production service or a demonstration of a real customer migration.
+
+## CI and deployment
+
+[Validation](.github/workflows/ci.yml) checks integration behavior, Terraform, and the Docker build. [Deploy existing demo](.github/workflows/deploy.yml) is manually triggered and updates an already provisioned service. It does not create the infrastructure.
+
+Follow the [AWS demo runbook](docs/demo-runbook.md) for a future session. AWS resources incur usage charges. Generate fresh local inputs and review the plan before deploying; the previous demo's deadline and IP settings are stale.
+
+Public ECR images remain separate from Terraform teardown. Final billed cost and residual backup/secret checks are not established by the primary-resource cleanup check.

@@ -83,7 +83,8 @@
       "Sid": "RegisterTaskDefinition",
       "Effect": "Allow",
       "Action": [
-        "ecs:RegisterTaskDefinition"
+        "ecs:RegisterTaskDefinition",
+        "ecs:DeregisterTaskDefinition"
       ],
       "Resource": "*"
     },

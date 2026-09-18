@@ -1,0 +1,9 @@
+{
+  "requests": 100,
+  "concurrency": 5,
+  "successes": 100,
+  "failures": 0,
+  "p50_ms": 57.19,
+  "p95_ms": 63.95,
+  "elapsed_seconds": 1.23
+}

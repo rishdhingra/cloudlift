@@ -1,0 +1,146 @@
+{
+  "events": [
+    {
+      "logStreamName": "api/migration/906727e08a774b058537d84fe2e91fb8",
+      "timestamp": 1789763535239,
+      "message": "{\"event\":\"migration_complete\"}",
+      "ingestionTime": 1789763538958,
+      "eventId": "39913060564986322984160282748497692698318248723032899584"
+    },
+    {
+      "logStreamName": "api/api/09ac456eead64463ab5a7c7a98b62010",
+      "timestamp": 1789763616239,
+      "message": "\u25c7 injected env (0) from .env // tip: \u2318 override existing { override: true }",
+      "ingestionTime": 1789763620072,
+      "eventId": "39913062371346684065140757310951736018060195773027844096"
+    },
+    {
+      "logStreamName": "api/api/e76466552205447e9aac7c7a2e53bb8b",
+      "timestamp": 1789763617060,
+      "message": "\u25c7 injected env (0) from .env // tip: \u2318 custom filepath { path: '/custom/path/.env' }",
+      "ingestionTime": 1789763620069,
+      "eventId": "39913062389655595873134398910148715168734429565648437248"
+    },
+    {
+      "logStreamName": "api/api/09ac456eead64463ab5a7c7a98b62010",
+      "timestamp": 1789763618351,
+      "message": "{\"event\":\"listening\",\"port\":3000}",
+      "ingestionTime": 1789763620072,
+      "eventId": "39913062418445857924437433385875173009893535273658482689"
+    },
+    {
+      "logStreamName": "api/api/e76466552205447e9aac7c7a2e53bb8b",
+      "timestamp": 1789763618352,
+      "message": "{\"event\":\"listening\",\"port\":3000}",
+      "ingestionTime": 1789763620069,
+      "eventId": "39913062418468158669635964009012863176996112631375134721"
+    },
+    {
+      "logStreamName": "api/api/e76466552205447e9aac7c7a2e53bb8b",
+      "timestamp": 1789763619062,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":5}",
+      "ingestionTime": 1789763620069,
+      "eventId": "39913062434301687760592706439503223150576449300621230082"
+    },
+    {
+      "logStreamName": "api/api/09ac456eead64463ab5a7c7a98b62010",
+      "timestamp": 1789763619064,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":5}",
+      "ingestionTime": 1789763620072,
+      "eventId": "39913062434346289250989767685790140138291817027422519298"
+    },
+    {
+      "logStreamName": "api/api/e76466552205447e9aac7c7a2e53bb8b",
+      "timestamp": 1789763633905,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":2}",
+      "ingestionTime": 1789763635031,
+      "eventId": "39913062765311648742382745747405873612979534785388871680"
+    },
+    {
+      "logStreamName": "api/api/09ac456eead64463ab5a7c7a98b62010",
+      "timestamp": 1789763633905,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":2}",
+      "ingestionTime": 1789763635058,
+      "eventId": "39913062765311648742382745747438994153224328722166775808"
+    },
+    {
+      "logStreamName": "api/api/09ac456eead64463ab5a7c7a98b62010",
+      "timestamp": 1789763647638,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":2}",
+      "ingestionTime": 1789763650058,
+      "eventId": "39913063071567782553803793368282750349305399898521468928"
+    },
+    {
+      "logStreamName": "api/api/e76466552205447e9aac7c7a2e53bb8b",
+      "timestamp": 1789763647673,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":4}",
+      "ingestionTime": 1789763650031,
+      "eventId": "39913063072348308635752365178203850730952302548239974400"
+    },
+    {
+      "logStreamName": "api/api/e76466552205447e9aac7c7a2e53bb8b",
+      "timestamp": 1789763648920,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":2}",
+      "ingestionTime": 1789763650031,
+      "eventId": "39913063100157337898320052235698891416944809346197553153"
+    },
+    {
+      "logStreamName": "api/api/09ac456eead64463ab5a7c7a98b62010",
+      "timestamp": 1789763648920,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":1}",
+      "ingestionTime": 1789763650058,
+      "eventId": "39913063100157337898320052235731541174840599349188362241"
+    },
+    {
+      "logStreamName": "api/api/09ac456eead64463ab5a7c7a98b62010",
+      "timestamp": 1789763663923,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":2}",
+      "ingestionTime": 1789763665058,
+      "eventId": "39913063434735418111874991246325869040418294543178924032"
+    },
+    {
+      "logStreamName": "api/api/e76466552205447e9aac7c7a2e53bb8b",
+      "timestamp": 1789763663936,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":3}",
+      "ingestionTime": 1789763665030,
+      "eventId": "39913063435025327799455889347132007829007001423762817024"
+    },
+    {
+      "logStreamName": "api/api/09ac456eead64463ab5a7c7a98b62010",
+      "timestamp": 1789763666006,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":2}",
+      "ingestionTime": 1789763670044,
+      "eventId": "39913063481187870360414279256172364367131353848593448960"
+    },
+    {
+      "logStreamName": "api/api/e76466552205447e9aac7c7a2e53bb8b",
+      "timestamp": 1789763666062,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/\",\"status\":200,\"duration_ms\":1}",
+      "ingestionTime": 1789763670017,
+      "eventId": "39913063482436712091531994152065519899433167583962136576"
+    },
+    {
+      "logStreamName": "api/api/09ac456eead64463ab5a7c7a98b62010",
+      "timestamp": 1789763666132,
+      "message": "{\"event\":\"request\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":2}",
+      "ingestionTime": 1789763670044,
+      "eventId": "39913063483997764255429137772005864869485047398346981377"
+    },
+    {
+      "logStreamName": "api/api/e76466552205447e9aac7c7a2e53bb8b",
+      "timestamp": 1789763666201,
+      "message": "{\"event\":\"request\",\"method\":\"POST\",\"path\":\"/api/customers\",\"status\":400,\"duration_ms\":1}",
+      "ingestionTime": 1789763670017,
+      "eventId": "39913063485536515674127750768738984739331289833293414401"
+    },
+    {
+      "logStreamName": "api/api/09ac456eead64463ab5a7c7a98b62010",
+      "timestamp": 1789763666270,
+      "message": "{\"event\":\"request\",\"method\":\"POST\",\"path\":\"/api/customers\",\"status\":400,\"duration_ms\":1}",
+      "ingestionTime": 1789763670044,
+      "eventId": "39913063487075267092826363765537793991110521286172278786"
+    }
+  ],
+  "searchedLogStreams": [],
+  "nextToken": "Bxkq6kVGFtq2y_MoigeqscPOdhXVbhiVtLoAmXb5jCo47BeCTACmwfgkI_n1sS2NNwdjgidC2I4RbL92jfBqjQ7S-WFich2WMOhh6ILuYx9j4WGfHqxIjRUKUutQ1s3hA7COI5Yn0AbOtnAHs6WGPguZIGqTU8IxBtnc9bejgvJ3GiqkzdpA17kthK2sGIFxO2vgeFwBMWylJtBwNadUcvAFbiukxR1soN0HPK5vT-yekS6vHDFgPs3YYp7h0ttsTuoQgpnTPyWpCt5ejouVvEQcyLhjL-bD4mKZjqqsOsXjKe606I3uskZi5XMtbTigzvZCPa7Pk8YxqPsVEOs7yA"
+}

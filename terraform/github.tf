@@ -19,7 +19,7 @@ resource "aws_iam_role" "github" {
     Principal = { Federated = var.existing_github_oidc_provider_arn != "" ? var.existing_github_oidc_provider_arn : aws_iam_openid_connect_provider.github[0].arn },
     Condition = { StringEquals = {
       "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com",
-      "token.actions.githubusercontent.com:sub" = "repo:${var.github_repository}:ref:refs/heads/main"
+      "token.actions.githubusercontent.com:sub" = "repo:rishdhingra@15848595/cloudlift@1373467968:ref:refs/heads/main"
     } }
   }] })
 }
@@ -27,7 +27,7 @@ resource "aws_iam_role_policy" "github" {
   role = aws_iam_role.github.id
   policy = jsonencode({ Version = "2012-10-17", Statement = [
     { Effect = "Allow", Action = "ecr-public:GetAuthorizationToken", Resource = "*" },
-    { Effect = "Allow", Action = "sts:GetServiceBearerToken", Resource = "*", Condition = { StringEquals = { "sts:AWSServiceName" = "ecr-public.amazonaws.com" } } },
+    { Effect = "Allow", Action = "sts:GetServiceBearerToken", Resource = "*" },
     { Effect = "Allow", Action = ["ecr-public:BatchCheckLayerAvailability", "ecr-public:InitiateLayerUpload", "ecr-public:UploadLayerPart", "ecr-public:CompleteLayerUpload", "ecr-public:PutImage", "ecr-public:DescribeImages"], Resource = "arn:aws:ecr-public::${data.aws_caller_identity.current.account_id}:repository/cloudlift-api" },
     { Effect = "Allow", Action = ["ecs:DescribeServices", "ecs:UpdateService"], Resource = aws_ecs_service.api.id },
     { Effect = "Allow", Action = ["ecs:DescribeTaskDefinition", "ecs:RegisterTaskDefinition"], Resource = "*" },

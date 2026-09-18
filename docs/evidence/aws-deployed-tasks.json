@@ -1,0 +1,31 @@
+{
+  "captured_at": "2026-09-18T21:01:49.259974+00:00",
+  "tasks": [
+    {
+      "task": "arn:aws:ecs:us-east-1:611483456410:task/cloudlift/25f74de0fc834515bac1fe8249928a35",
+      "definition": "arn:aws:ecs:us-east-1:611483456410:task-definition/cloudlift-api:2",
+      "zone": "us-east-1b",
+      "status": "RUNNING",
+      "health": "HEALTHY",
+      "images": [
+        {
+          "image": "public.ecr.aws/c5t6h8t1/cloudlift-api@sha256:d2194b2cb65a3e07afb8e6d1e16be765404b2a760c9afbdb42d6deeb78b2e21d",
+          "digest": "sha256:d2194b2cb65a3e07afb8e6d1e16be765404b2a760c9afbdb42d6deeb78b2e21d"
+        }
+      ]
+    },
+    {
+      "task": "arn:aws:ecs:us-east-1:611483456410:task/cloudlift/632e95d73cc24cf289726009eb802ea2",
+      "definition": "arn:aws:ecs:us-east-1:611483456410:task-definition/cloudlift-api:2",
+      "zone": "us-east-1a",
+      "status": "RUNNING",
+      "health": "HEALTHY",
+      "images": [
+        {
+          "image": "public.ecr.aws/c5t6h8t1/cloudlift-api@sha256:d2194b2cb65a3e07afb8e6d1e16be765404b2a760c9afbdb42d6deeb78b2e21d",
+          "digest": "sha256:d2194b2cb65a3e07afb8e6d1e16be765404b2a760c9afbdb42d6deeb78b2e21d"
+        }
+      ]
+    }
+  ]
+}

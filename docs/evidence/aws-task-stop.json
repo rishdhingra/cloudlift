@@ -1,0 +1,5 @@
+{
+    "Task": "arn:aws:ecs:us-east-1:611483456410:task/cloudlift/dfc82a49b77245d89dfe7d209332e6cd",
+    "Desired": "STOPPED",
+    "Status": "DEACTIVATING"
+}

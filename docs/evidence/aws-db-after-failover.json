@@ -1,0 +1,6 @@
+{
+    "Status": "available",
+    "MultiAZ": true,
+    "PrimaryZone": "us-east-1b",
+    "StandbyZone": "us-east-1a"
+}
